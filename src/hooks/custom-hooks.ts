@@ -31,9 +31,6 @@ export const useWeather = (locateKey: string) => {
     const [weather, setWeather] = useState<CurrentConditions>({
         WeatherText: '',
         Temperature: 0,
-        RealFeelTemperature: 0,
-        RealFeelTemperatureShade: 0,
-        Past12HourRange: {Maximum: 0, Minimum: 0}
     })
     const [isLoading, setIsLoading] = useState(false)
     
@@ -43,18 +40,12 @@ export const useWeather = (locateKey: string) => {
             try {
                 const { 
                     WeatherText,
-                    Temperature: { Metric: { Value: TemperatureValue } },
-                    RealFeelTemperature: { Metric: { Value: RealFeelTemperatureValue } },
-                    RealFeelTemperatureShade: { Metric: { Value: RealFeelTemperatureShadeValue } },
-                    TemperatureSummary: { Past12HourRange: { Minimum: { Metric: { Value: MinimumValue } }, Maximum: { Metric: { Value: MaximumValue } } } }
+                    Temperature: { Metric: { Value: TemperatureValue } }
                 } = await getWeather(locateKey);
 
                 setWeather({
                     WeatherText,
-                    Temperature: TemperatureValue,
-                    RealFeelTemperature: RealFeelTemperatureValue,
-                    RealFeelTemperatureShade: RealFeelTemperatureShadeValue,
-                    Past12HourRange: {Minimum: MinimumValue, Maximum: MaximumValue}
+                    Temperature: TemperatureValue
                 })
 
             } catch(error) {
