@@ -1,26 +1,21 @@
 import './styles/App.css'
-import { IconSearch } from '@tabler/icons-react';
-import { useState } from 'react';
 import { TemperatureCard } from './components/TemperatureCard';
+import { useWeatherContext } from './components/WeatherContext';
+import { InputContainer } from './components/InputContainer';
 
 export const App = () => {
-    const [cities, setCities] = useState([<TemperatureCard city='acapulco' />,
-    <TemperatureCard city='acapulco' />,
-    <TemperatureCard city='acapulco' />])
+    const { cities } = useWeatherContext()
 
     return <main className='background-light'>
 
         <div className='container'>
 
-            <header className='input-container'>
-                <input className='glass' type="text" name="search" placeholder='Buscar ciudad...' />
-                <button className='glass' >
-                    <IconSearch color='#aaa' />
-                </button>
-            </header>
+            <InputContainer />
 
             <section className='cities-container'>
-                {cities.map(city => city)}
+                {
+                    cities.map((city, index) => <TemperatureCard key={index} name={city} />)
+                }
             </section>
         </div>
 
