@@ -1,19 +1,24 @@
-import { IconSun } from "@tabler/icons-react"
-import { useCallback, useMemo, useState } from "react"
+import { memo, useCallback, useMemo, useState } from "react"
 import style from '../styles/TemperatureCard.module.css'
+import { IconWeather } from "./IconWeather"
 
 type TMeasure = {
     c: () => void,
     f: () => void
 }
 
-type TemperatureProps = {
+type temp = {
     num: number,
-    med: string
+    med: 'c' | 'f',
 }
 
-export const TemperatureData = ({ temp }: { temp: TemperatureProps }) => {
-    const [measure, setMeasure] = useState<TemperatureProps>(temp)
+interface TemperatureProps {
+    temp: temp,
+    weather: string
+}
+
+export const TemperatureData = memo(({ temp, weather }: TemperatureProps) => {
+    const [measure, setMeasure] = useState<temp>(temp)
 
     const tMeasure = useMemo<TMeasure>(() => ({
         c: () => setMeasure(temp),
@@ -29,7 +34,7 @@ export const TemperatureData = ({ temp }: { temp: TemperatureProps }) => {
     }, [measure])
 
     return <section className={style.temperatureData}>
-        <IconSun size={100} />
+        <IconWeather weather={weather} />
         <div className={style.temperatureMeasure}>
             <p>{measure.num}</p>
             <p className={style.temperatureType}>
@@ -38,4 +43,4 @@ export const TemperatureData = ({ temp }: { temp: TemperatureProps }) => {
             </p>
         </div>
     </section>
-}
+})

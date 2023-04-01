@@ -19,11 +19,13 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         if (city) {
-            if (cities.length > 2) {
-                cities.shift()
-            }
+            if (!cities.includes(city)) {
+                if (cities.length > 2) {
+                    cities.shift()
+                }
 
-            setCities([...cities, city])
+                setCities([...cities, city])
+            }
         }
     }, [city])
 

@@ -7,16 +7,26 @@ export const useCity = (city: string) => {
         Key: '',
         LocalizedName: ''
     })
+
+    const [error, setError] = useState<boolean>(false)
     
     useEffect(() => {
+        if (city) {
             const fetchData = async () => {
                 const data = await getLocate(city)
-                setLocateKey({Key: data[0].Key, LocalizedName: data[0].LocalizedName})
+                if (data) {
+                    setLocateKey({Key: data[0]?.Key, LocalizedName: data[0]?.LocalizedName})
+                } else {
+                    setLocateKey({Key: '', LocalizedName: ''})
+                    setError(true)
+                }
+
             }
             fetchData()
+        }
     }, [city])
 
-    return locateKey
+    return {locateKey, error}
 }
 
 export const useWeather = (locateKey: string) => {
@@ -27,29 +37,32 @@ export const useWeather = (locateKey: string) => {
     const [isLoading, setIsLoading] = useState(false)
     
     useEffect(() => {
-        setIsLoading(true)
-        const fetchWeather = async () => {
-            try {
-                const data = await getWeather(locateKey);
-                
-                const { 
-                    WeatherText,
-                    Temperature: { Metric: { Value: TemperatureValue } }
-                } = data[0]
-
-                setWeather({
-                    WeatherText,
-                    Temperature: TemperatureValue
-                })
-
-            } catch(error) {
-                console.error(error);
-            }finally {
-                setIsLoading(false)
-                
+        if (locateKey) {
+            setIsLoading(true)
+            const fetchWeather = async () => {
+                try {
+                    const data = await getWeather(locateKey);
+                    
+                    const { 
+                        WeatherText,
+                        Temperature: { Metric: { Value: TemperatureValue } },
+                        IsDayTime
+                    } = data[0]
+    
+                    setWeather({
+                        WeatherText,
+                        Temperature: TemperatureValue,
+                    })
+    
+                } catch(error) {
+                    console.error(error);
+                }finally {
+                    setIsLoading(false)
+                    
+                }
             }
+            fetchWeather()
         }
-        fetchWeather()
     },[locateKey])
 
     return {weather, isLoading}
